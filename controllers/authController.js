@@ -23,10 +23,19 @@ exports.loginUser= async (req,res)=>{
     bcrypt.compare(password,user.password,(err,same)=>{
       if(same){
         //User Sesion 
-        res.status(200).send("You Are Logged In");
+        req.session.userID=user._id;
+        res.status(200).redirect("/");
       }
     });
   }
   
+};
+
+exports.logoutUser=(req,res)=>{
+  req.session.destroy(()=>{
+
+    res.redirect("/");
+  });
+
 };
 
