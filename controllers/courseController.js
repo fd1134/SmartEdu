@@ -1,13 +1,11 @@
 const Course = require("../models/Course");
 const Category=require("../models/Category");
 
+
 exports.createCourse = async (req, res) => {
   try {
     const course = await Course.create(req.body);
-    res.status(201).json({
-      status: "Success",
-      course,
-    });
+    res.status(201).redirect("/courses");
   } catch (error) {
     res.status(400).json({
       status: "Fail",
@@ -26,7 +24,7 @@ const categorySlug=req.query.categories;
       filter={category:category._id}      
     }
 
-    const courses= await Course.find(filter).sort('-createdAt');
+    const courses= await Course.find(filter).sort("-createdAT");
     const categories=await Category.find();
    // res.status(200).json({status:"Success",courses});
    res.status(200).render("courses",{
