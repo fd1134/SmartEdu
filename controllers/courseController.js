@@ -1,10 +1,23 @@
 const Course = require("../models/Course");
 const Category=require("../models/Category");
+const User=require("../models/User");
 
 
 exports.createCourse = async (req, res) => {
   try {
-    const course = await Course.create(req.body);
+
+   /* 
+    await Course.create({
+    name:req.body.name,
+    description:req.body.description,
+    category:req.body.category,
+    author:req.session.userID
+  });
+    aşağıdaki ile aynı :)
+   */
+ 
+   
+     await Course.create({...req.body,author: req.session.userID});
     res.status(201).redirect("/courses");
   } catch (error) {
     res.status(400).json({
@@ -44,11 +57,12 @@ const categorySlug=req.query.categories;
 
 exports.getCourse= async (req,res)=>{
   try {
-    const course=await Course.findOne({slug:req.params.slug});
-
+    const course=await Course.findOne({slug:req.params.slug}).populate("author");
+    
+    
     res.status(200).render("course-single",{
       page_name:'courses',
-      course
+      course,
     });
     
   } catch (error) {
@@ -58,4 +72,22 @@ exports.getCourse= async (req,res)=>{
     });
     
   }
+};
+
+exports.enrollCorse=async (req,res)=>{
+
+  try {
+    const user=await User.findById(req.session.userID);
+   await  user.courses.push(req.body.course_id);
+   await user.save();
+    res.status(200).redirect("/users/dashboard");
+    
+  } catch (error) {
+    res.status(400).json({
+      status:"Fail",
+      error
+    });
+    
+  }
+
 };
