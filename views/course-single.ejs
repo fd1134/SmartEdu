@@ -16,12 +16,17 @@
 							<img src="/images/blog_single.jpg" alt="" class="img-fluid">
 						</div>
 						<div class="post-content">
-							<div class="post-date">
-								<form method="post" action="/courses/enroll">
-									<input type="hidden" value="<%= course._id %>" name="course_id">
-									<button class="btn btn-warning btn-lg text-white"><span>ENROLL</span></button>
-								</form>
-							</div>
+							<% if (user && user.courses==course._id) { %>
+
+								<div class="post-date">
+									<form method="post" action="/courses/enroll">
+										<input type="hidden" value="<%= course._id %>" name="course_id">
+										<button class="btn btn-warning btn-lg text-white"><span>ENROLL</span></button>
+									</form>
+								</div>
+							 
+							<% } %>
+
 							<div class="meta-info-blog">
 								<span><i class="fa fa-calendar"></i> <a href="#">May 11, 2015</a> </span>
 							</div>
@@ -60,9 +65,9 @@
 				<div class="col-lg-3 col-12 right-single">
 					<div class="widget-search">
 						<div class="site-search-area">
-							<form method="get" id="site-searchform" action="#">
+							<form method="get" id="site-searchform" action="/courses">
 								<div>
-									<input class="input-text form-control" name="search-k" id="search-k" placeholder="Search keywords..." type="text">
+									<input class="input-text form-control" name="search" id="search-k" placeholder="Search keywords..." type="text">
 									<input id="searchsubmit" value="Search" type="submit">
 								</div>
 							</form>
@@ -71,12 +76,11 @@
 					<div class="widget-categories">
 						<h3 class="widget-title">Categories</h3>
 						<ul>
-							<li><a href="#">Political Science</a></li>
-							<li><a href="#">Business Leaders Guide</a></li>
-							<li><a href="#">Become a Product Manage</a></li>
-							<li><a href="#">Language Education</a></li>
-							<li><a href="#">Micro Biology</a></li>
-							<li><a href="#">Social Media Management</a></li>
+							<% for( let index = 0; index < categories.length; index++ ) { %>
+								<li><a href="/courses?categories=<%= categories[index].slug %>"><%= categories[index].name %></a></li>
+							<% } %>
+							
+							
 						</ul>
 					</div>
 				</div>
