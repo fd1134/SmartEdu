@@ -17,13 +17,14 @@ exports.createCourse = async (req, res) => {
    */
  
    
-     await Course.create({...req.body,author: req.session.userID});
+    await Course.create({...req.body,author: req.session.userID});
+    global.message.success=`Başarıyla ${req.body.name} Kaydedildi`;
     res.status(201).redirect("/courses");
   } catch (error) {
-    res.status(400).json({
-      status: "Fail",
-      error,
-    });
+    
+    global.message.err=`Bir Hatta Oluştu`;
+
+    res.status(400).redirect("/courses");
   }
 };
 

@@ -16,6 +16,24 @@
 
             <div class="row">
                 <div class="col-xl-10 col-md-10 col-sm-10 offset-1">
+                       
+                         
+
+
+                    <% if (global.message.success) { %>
+                     <div class="alert alert-success">
+                        <%= global.message.success %>
+                        <%- global.message.success=null %>
+                     </div>
+                    <% } else if (global.message.err){ %>
+                    
+                    <div class="alert alert-danger">
+                        <%= global.message.err %>
+                        <%- global.message.err=null %>
+                     </div>
+                    <% }  %>  
+                     
+
                     <div class="contact_form">
                         <div id="message"></div>
                         <form id="contactform" class="" action="/contact" name="contactform" method="post">

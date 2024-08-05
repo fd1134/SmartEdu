@@ -26,12 +26,14 @@ exports.getLoginPage=(req,res)=>{
 
 exports.getContactPage=(req,res)=>{
     res.status(200).render("contact",{
-        page_name:"contact"
+        page_name:"contact",
+       
     });
 };
 
 exports.sendEmail=async (req,res)=>{
-    const aoutputMessage=`
+    try {
+        const aoutputMessage=`
 
         <h1> Mail Details </h1>
         <ul>
@@ -70,5 +72,14 @@ exports.sendEmail=async (req,res)=>{
     } 
 
    await main();
+   global.message.success="Your Message Success";
     res.status(200).redirect("/contact");
+        
+    } catch (error) {
+
+        global.message.err="Your Message Not Recived";
+        res.status(400).redirect("/contact");
+        
+    }
+    
 };

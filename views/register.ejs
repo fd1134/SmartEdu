@@ -11,6 +11,20 @@
                         <div id="message"></div>
                         <form action="users/signup" name="contactform" method="post">
                             <div class="row row-fluid">
+                                <div class="offset-1 col-lg-10 col-md-10 col-sm-10">
+                                <% if (global.message.success) { %>
+                                    <div class="alert alert-success">
+                                       <%= global.message.success %>
+                                       <%- global.message.success=null %>
+                                    </div>
+                                   <% } else if (global.message.err){ %>
+                                   
+                                   <div class="alert alert-danger">
+                                       <%= global.message.err %>
+                                       <%- global.message.err=null %>
+                                    </div>
+                                   <% }  %>  
+                                </div>
 							    <div class="offset-1 col-lg-10 col-md-10 col-sm-10">
                                     <input type="text" name="name" id="name" class="form-control" placeholder="Name">
                                 </div>

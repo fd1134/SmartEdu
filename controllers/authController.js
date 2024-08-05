@@ -1,4 +1,5 @@
 const bcrypt =require("bcrypt");
+const {validationResult } = require('express-validator');
 
 const User = require("../models/User");
 const Category=require("../models/Category");
@@ -9,10 +10,15 @@ exports.createUser = async (req, res) => {
     const user = await User.create(req.body);
     res.status(201).redirect("/login");
   } catch (error) {
-    res.status(400).json({
-      status: "Fail",
-      error,
-    });
+   const result = validationResult(req);
+   global.message.err="";
+    for (let index = 0; index < result.array().length; index++) {
+      
+      global.message.err += result.array()[index].msg
+    }
+   
+
+    res.status(400).redirect("/register");
   }
 };
 
@@ -22,12 +28,22 @@ exports.loginUser= async (req,res)=>{
   if(user)
   {
     bcrypt.compare(password,user.password,(err,same)=>{
-     
-        //User Sesion 
-        req.session.userID=user._id;
-        res.status(200).redirect("/users/dashboard");
-      
+     if(same){
+      //User Sesion 
+      req.session.userID=user._id;
+      res.status(200).redirect("/users/dashboard");
+
+     }else{
+      global.message.err="Girdiğin Şifre Yanlış"
+      res.status(400).redirect("/login");
+
+     }
     });
+  }
+  else{
+    global.message.err="Böyle Bir Kullanıcı Yok";
+    res.status(400).redirect("/login");
+
   }
   
 };

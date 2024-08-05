@@ -18,6 +18,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/smartedu-db')
 // Global Variable
 
 global.userIN=null;
+global.message={
+  err:null,
+  success:null
+};
 
 // Template Engine
 app.set("view engine","ejs");
