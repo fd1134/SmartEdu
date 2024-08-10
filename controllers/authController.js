@@ -60,10 +60,30 @@ exports.getDashboardPage=async (req,res)=>{
   const user=await User.findById(req.session.userID).populate("courses");
   const courses=await Course.find({author:req.session.userID});
   const categories=await Category.find();
+  const users=await User.find();
   res.render("dashboard",{
     page_name:"dashboard",
     user,
     categories,
-    courses
+    courses,
+    users
   });
+};
+
+exports.deleteUser=async (req,res)=>{
+
+  try {
+    const user=await User.findByIdAndDelete(req.params.id);
+    await Course.deleteMany({author:req.params.id});
+    global.message.err=`Başarıyla ${ user.name} Kullanıcı Silindi`;
+    res.status(200).redirect("/users/dashboard");
+
+    
+  } catch (error) {
+    res.status(400).json({
+      status:"Fail",
+      error
+    });  
+    
+  }
 };

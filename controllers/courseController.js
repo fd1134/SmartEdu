@@ -77,7 +77,6 @@ exports.getCourse= async (req,res)=>{
     const course=await Course.findOne({slug:req.params.slug}).populate("author");
     const user=await User.findById(req.session.userID);
     const categories=await Category.find();
-    
     res.status(200).render("course-single",{
       page_name:'courses',
       course,
@@ -94,10 +93,10 @@ exports.getCourse= async (req,res)=>{
   }
 };
 
-exports.enrollCorse=async (req,res)=>{
+exports.enrollCourse=async (req,res)=>{
 
   try {
-    const user=await User.findById(req.session.userID);
+   const user=await User.findById(req.session.userID);
    await  user.courses.push(req.body.course_id);
    await user.save();
     res.status(200).redirect("/users/dashboard");
@@ -110,11 +109,45 @@ exports.enrollCorse=async (req,res)=>{
   }
 };
 
-exports.releaseCorse=async (req,res)=>{
+exports.releaseCourse=async (req,res)=>{
   try {
    const user=await User.findById(req.session.userID);
    await user.courses.pull(req.body.course_id);
    await user.save();
+   res.status(200).redirect("/users/dashboard");
+    
+  } catch (error) {
+    res.status(400).json({
+      status:"Fail",
+      error
+    });   
+  }
+};
+
+exports.deleteCourse=async (req,res)=>{
+  try {
+   const course= await Course.findOneAndDelete({slug:req.params.slug});
+   global.message.err=`Başarıyla ${ course.name} Kursu Silindi`;
+   res.status(200).redirect("/users/dashboard");
+    
+  } catch (error) {
+    res.status(400).json({
+      status:"Fail",
+      error
+    });   
+  }
+};
+
+exports.updateCourse=async (req,res)=>{
+  try {
+  const course=await Course.findOne({slug:req.params.slug});
+  let courseName=course.name;
+  course.name=req.body.name;
+  course.description=req.body.description;
+  course.category=req.body.category;
+  course.save();
+   
+   global.message.success=`Başarıyla ${ courseName} Kursu Güncellendi`;
    res.status(200).redirect("/users/dashboard");
     
   } catch (error) {

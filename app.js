@@ -2,6 +2,7 @@ const express=require("express");
 const mongoose = require('mongoose');
 const session = require('express-session')
 const MongoStore = require('connect-mongo');
+var methodOverride = require('method-override')
 
 const pageRoute=require("./routes/pageRoute");
 const courseRoute=require("./routes/courseRoute");
@@ -37,6 +38,12 @@ app.use(session({
   saveUninitialized: true,
   store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/smartedu-db' })
 }));
+
+app.use(methodOverride('_method',{
+  methods:["GET","POST"]
+  
+})
+);
 
 // Routes
 app.use("*",(req,res,next)=>{
